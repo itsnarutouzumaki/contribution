@@ -81,7 +81,7 @@ app.post("/get/marks", async (req, res) => {
   console.log("Got hit");
 
   const ORGANIZATION_NAME = process.env.ORGANIZATION_NAME;
-  const [username] = req.body;
+  const { username } = req.body;
   const access_token = req.cookies?.accessToken;
 
   if (!access_token) {
@@ -104,8 +104,13 @@ app.post("/get/marks", async (req, res) => {
     );
 
     const assigneeScores = {};
+    const assigneeScoresLast30 = {};
     assigneeScores[username] = 0;
+    assigneeScoresLast30[username] = 0;
     let allIssues = [];
+
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     for (const repo of repos) {
       let page_no = 1;
@@ -130,9 +135,16 @@ app.post("/get/marks", async (req, res) => {
           if (spLabel) {
             const marks = parseInt(spLabel.name.split("-")[1].trim());
             if (!isNaN(marks)) {
-              if (!assigneeScores[assigneeName])
-                assigneeScores[assigneeName] = 0;
-              assigneeScores[assigneeName] += marks;
+              // Total marks
+              assigneeScores[assigneeName] =
+                (assigneeScores[assigneeName] || 0) + marks;
+
+              // Last 30 days
+              const closedDate = new Date(issue.closed_at);
+              if (closedDate >= thirtyDaysAgo) {
+                assigneeScoresLast30[assigneeName] =
+                  (assigneeScoresLast30[assigneeName] || 0) + marks;
+              }
             }
           }
         }
@@ -146,7 +158,16 @@ app.post("/get/marks", async (req, res) => {
       .sort((a, b) => b[1] - a[1])
       .map(([assignee, marks]) => ({ assignee, marks }));
 
-    res.json({ totalIssues: allIssues.length, repos, sortedScores });
+    const sortedScoresLast30 = Object.entries(assigneeScoresLast30)
+      .sort((a, b) => b[1] - a[1])
+      .map(([assignee, marks]) => ({ assignee, marks }));
+
+    res.json({
+      totalIssues: allIssues.length,
+      repos,
+      sortedScores,
+      sortedScoresLast30,
+    });
   } catch (error) {
     console.error("API Error:", error.message);
     if (error.response && error.response.status === 404) {
@@ -158,6 +179,7 @@ app.post("/get/marks", async (req, res) => {
     });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`✅ Backend running at http://localhost:${PORT}`);
