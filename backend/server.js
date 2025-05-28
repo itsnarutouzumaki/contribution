@@ -99,18 +99,20 @@ app.post("/get/marks", async (req, res) => {
     );
 
     const repos = reposResponse.data;
-    console.log(
-      `Found ${repos.length} repos for Organization ${ORGANIZATION_NAME}`
-    );
+    console.log(`Found ${repos.length} repos for Organization ${ORGANIZATION_NAME}`);
 
-    const assigneeScores = {};
+    const assigneeScoresAllTime = {};
     const assigneeScoresLast30 = {};
-    assigneeScores[username] = 0;
-    assigneeScoresLast30[username] = 0;
+    const assigneeScoresLast60 = {};
+    assigneeScoresAllTime[username]=0;
+    assigneeScoresLast30[username]=0;
+    assigneeScoresLast60[username]=0;
+
     let allIssues = [];
 
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
 
     for (const repo of repos) {
       let page_no = 1;
@@ -135,12 +137,19 @@ app.post("/get/marks", async (req, res) => {
           if (spLabel) {
             const marks = parseInt(spLabel.name.split("-")[1].trim());
             if (!isNaN(marks)) {
-              // Total marks
-              assigneeScores[assigneeName] =
-                (assigneeScores[assigneeName] || 0) + marks;
+              const closedDate = new Date(issue.closed_at);
+
+              // All-time score
+              assigneeScoresAllTime[assigneeName] =
+                (assigneeScoresAllTime[assigneeName] || 0) + marks;
+
+              // Last 60 days
+              if (closedDate >= sixtyDaysAgo) {
+                assigneeScoresLast60[assigneeName] =
+                  (assigneeScoresLast60[assigneeName] || 0) + marks;
+              }
 
               // Last 30 days
-              const closedDate = new Date(issue.closed_at);
               if (closedDate >= thirtyDaysAgo) {
                 assigneeScoresLast30[assigneeName] =
                   (assigneeScoresLast30[assigneeName] || 0) + marks;
@@ -154,19 +163,28 @@ app.post("/get/marks", async (req, res) => {
       }
     }
 
-    const sortedScores = Object.entries(assigneeScores)
-      .sort((a, b) => b[1] - a[1])
-      .map(([assignee, marks]) => ({ assignee, marks }));
+    // Merge all assignees for last 30/60
+    const allRecentAssignees = new Set([
+      ...Object.keys(assigneeScoresLast30),
+      ...Object.keys(assigneeScoresLast60),
+    ]);
 
-    const sortedScoresLast30 = Object.entries(assigneeScoresLast30)
+    const sortedScoresLast30 = [...allRecentAssignees].map((assignee) => ({
+      assignee,
+      marks: assigneeScoresLast30[assignee] || 0,
+      last60: assigneeScoresLast60[assignee] || 0,
+    })).sort((a, b) => b.marks - a.marks);
+
+    // Sort all-time scores
+    const sortedScoresAllTime = Object.entries(assigneeScoresAllTime)
       .sort((a, b) => b[1] - a[1])
       .map(([assignee, marks]) => ({ assignee, marks }));
 
     res.json({
       totalIssues: allIssues.length,
       repos,
-      sortedScores,
       sortedScoresLast30,
+      sortedScoresAllTime
     });
   } catch (error) {
     console.error("API Error:", error.message);
@@ -179,7 +197,6 @@ app.post("/get/marks", async (req, res) => {
     });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`✅ Backend running at http://localhost:${PORT}`);
