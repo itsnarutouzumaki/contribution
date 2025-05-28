@@ -38,11 +38,11 @@ function App() {
       
       {!user ? (
         <>
-        <h1 className="text-2xl text-red-500 hover:text-amber-300 ">
-        GitHub Login Demo
+        <h1 className="text-2xl font-black text-[#004FE8]">
+        GitHub Login
       </h1>
         <button
-          className="px-4 py-2 mt-2 bg-amber-500 rounded-2xl hover:bg-green-300 active:bg-green-800"
+          className="px-4 py-2 mt-2 bg-[#003FB9] rounded-2xl hover:shadow-2xl hover:shadow-blue-800 hover:border-2"
           onClick={handleGithubLogin}
         >
           Login with GitHub
