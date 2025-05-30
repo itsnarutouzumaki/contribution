@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "./Loader";
+import { useLocation } from "react-router-dom";
 
 function RepoBar({ repo }) {
   return (
     <a
-      className="w-[90%] hover:w-full border-2 my-1 py-1 rounded-lg bg-blue-200 text-black hover:bg-blue-700 hover:text-white hover:shadow-2xl hover:shadow-neutral-950 duration-250 hover:font-black"
+      className="w-[98%] hover:w-full my-1 py-1 flex text-center justify-center items-center align-middle rounded-lg bg-blue-200 text-black hover:bg-blue-700 hover:text-white hover:shadow-2xl hover:shadow-neutral-950 duration-250 hover:font-black"
       href={repo.html_url}
       target="_blank"
       rel="noopener noreferrer"
     >
-      <p>{repo.name}</p>
+      <p className="mr-1">{repo.name} 🔗</p>
     </a>
   );
 }
@@ -24,7 +25,7 @@ function RankBar({ User, status, rank }) {
 
   return (
     <a
-      className={`w-[90%] hover:w-full border-2 my-1 py-1 bg-blue-200 text-black hover:bg-blue-700 hover:text-white hover:shadow-2xl hover:shadow-red-950 duration-250 hover:font-black ${
+      className={`w-[98%] hover:w-full border-2 my-1 py-1 bg-blue-200 text-black hover:bg-blue-700 hover:text-white hover:shadow-2xl hover:shadow-red-950 duration-250 hover:font-black ${
         status
           ? "border-green-50 bg-green-200 font-black sticky top-12 hover:bg-green-600"
           : "border-amber-50 bg-amber-200"
@@ -50,14 +51,20 @@ function RankBar({ User, status, rank }) {
   );
 }
 
-function Profile({ user }) {
+function Profile() {
   const [repos, setRepos] = useState([]);
   const [rank, setRank] = useState([]);
   const [last30, setLast30] = useState(false);
   const [issueResponse, setIssueResponse] = useState(null);
   const [response, setResponse] = useState(null);
+  const location = useLocation();
+  const state=location.state || {}
+  const [user, setUser] = useState(state.user)
 
   const fetchData = async () => {
+    console.log("i am profile page");
+    console.log(state);
+    console.log(user);
     try {
       const response = await axios.post(
         "http://localhost:4000/get/marks",
@@ -98,7 +105,7 @@ function Profile({ user }) {
         <Loader />
       ) : (
         <div className="flex w-screen h-screen flex-col items-center lg:flex-row lg:justify-evenly">
-          <div className="bg-[#f6f6f6] hover:border-4 hover:border-black h-fit lg:h-screen text-center w-[90%] lg:w-[45%] rounded-2xl flex flex-col items-center overflow-auto my-2">
+          <div className="bg-[#f6f6f6] h-fit lg:h-screen text-center w-[90%] lg:w-[45%] rounded-2xl flex flex-col items-center overflow-auto my-2">
             <div className="text-3xl font-black py-2 sticky top-0 bg-[#004FE8] w-full text-white">
               Organization's Public Repositories
             </div>
@@ -107,7 +114,7 @@ function Profile({ user }) {
             ))}
           </div>
 
-          <div className="bg-[#f6f6f6] hover:border-4 hover:border-black h-fit lg:h-screen text-center w-[90%] lg:w-[45%] rounded-2xl flex flex-col items-center overflow-auto my-2">
+          <div className="bg-[#f6f6f6] h-fit lg:h-screen text-center w-[90%] lg:w-[45%] rounded-2xl flex flex-col items-center overflow-auto my-2">
             <div className="text-3xl font-black py-2 sticky top-0 bg-[#004FE8] w-full text-white">
               {last30 ? "Last 30 Ranking" : "All-Time Ranking"}
             </div>
