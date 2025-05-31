@@ -22,15 +22,21 @@ function Login() {
     }
 
     const userData = await new Promise((resolve) => {
+      const allowedOrigins = [
+        "http://localhost:4000",
+        "https://contribution-1.onrender.com",
+      ];
+
       const receiveMessage = (event) => {
-        if (event.origin !== "http://localhost:4000") return;
+        if (!allowedOrigins.includes(event.origin)) return;
         window.removeEventListener("message", receiveMessage);
         resolve(event.data);
       };
+
       window.addEventListener("message", receiveMessage);
     });
     console.log(userData);
-    navigate("/dashboard", { state: { user:userData.user} });
+    navigate("/dashboard", { state: { user: userData.user } });
   };
 
   return (
