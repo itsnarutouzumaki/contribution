@@ -11,7 +11,7 @@ function Login() {
     const top = window.innerHeight / 2 - height / 2;
 
     const popup = window.open(
-      "http://localhost:4000/auth/github",
+      "https://contribution-1.onrender.com/auth/github",
       "GitHub Login",
       `width=${width},height=${height},left=${left},top=${top}`
     );

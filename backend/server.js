@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get("/auth/github", (req, res) => {
-  const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=http://localhost:4000/auth/github/callback`;
+  const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=https://contribution-1.onrender.com/auth/github/callback`;
   res.redirect(redirect_uri);
 });
 
@@ -199,5 +199,5 @@ app.post("/get/marks", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Backend running at http://localhost:${PORT}`);
+  console.log(`✅ Backend running`);
 });
