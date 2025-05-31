@@ -20,11 +20,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get("/auth/github", (req, res) => {
+  console.log("/auth/github got hit");
   const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=https://contribution-1.onrender.com/auth/github/callback`;
+  console.log("redirected successfully");
   res.redirect(redirect_uri);
 });
 
 app.get("/auth/github/callback", async (req, res) => {
+  console.log("/auth/github/callback got hit");
   const code = req.query.code;
 
   try {
@@ -41,7 +44,7 @@ app.get("/auth/github/callback", async (req, res) => {
         },
       }
     );
-
+    console.log("token res got");
     const access_token = tokenRes.data.access_token;
 
     const userRes = await axios.get("https://api.github.com/user", {
@@ -49,7 +52,7 @@ app.get("/auth/github/callback", async (req, res) => {
         Authorization: `token ${access_token}`,
       },
     });
-
+    console.log("userRes got");
     const user = userRes.data;
 
     // Set the access token in a secure HttpOnly cookie
@@ -58,7 +61,7 @@ app.get("/auth/github/callback", async (req, res) => {
       secure: false, // Set true only in production with HTTPS
       sameSite: "Lax",
     };
-
+    
     res.cookie("accessToken", access_token, options).send(`
       <html>
         <body>
