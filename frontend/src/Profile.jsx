@@ -4,6 +4,7 @@ import Loader from "./Loader";
 import { useLocation } from "react-router-dom";
 import RepoBar from "./RepoBar";
 import RankBar from "./RankBar";
+import toast from "react-hot-toast";
 
 function Profile() {
   const [repos, setRepos] = useState([]);
@@ -12,13 +13,14 @@ function Profile() {
   const [issueResponse, setIssueResponse] = useState(null);
   const [response, setResponse] = useState(null);
   const location = useLocation();
-  const state=location.state || {}
-  const [user, setUser] = useState(state.user)
+  const state = location.state || {};
+  const [user, setUser] = useState(state.user);
 
   const fetchData = async () => {
-    console.log("i am profile page");
-    console.log(state);
-    console.log(user);
+    toast.loading("Please Wait, Fetching data", {
+      id: "fetch-toast",
+      position: "top-center",
+    });
     try {
       const response = await axios.post(
         "https://contribution-1.onrender.com/get/marks",
@@ -29,9 +31,16 @@ function Profile() {
       setRepos(response.data.repos);
       setIssueResponse(response.data);
       setRank(response.data.sortedScoresAllTime);
-      // console.log(response.data);
+      toast.success("Data fetched successfully!", {
+        id: "fetch-toast",
+        position: "top-center",
+      });
     } catch (err) {
       setResponse(err);
+      toast.error("Error fetching data: " + err.message, {
+        id: "fetch-toast",
+        position: "top-center",
+      });
       console.error("Error fetching data:", err.message);
     }
   };

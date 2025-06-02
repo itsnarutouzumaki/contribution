@@ -27,9 +27,9 @@ const getMarks = async (req, res) => {
     const assigneeScoresAllTime = {};
     const assigneeScoresLast30 = {};
     const assigneeScoresLast60 = {};
-    assigneeScoresAllTime[username]=0;
-    assigneeScoresLast30[username]=0;
-    assigneeScoresLast60[username]=0;
+    assigneeScoresAllTime[username] = 0;
+    assigneeScoresLast30[username] = 0;
+    assigneeScoresLast60[username] = 0;
 
     let allIssues = [];
 
@@ -111,6 +111,19 @@ const getMarks = async (req, res) => {
     });
   } catch (error) {
     console.error("API Error:", error.message);
+
+    // Handle GitHub API rate limit exceeded
+    if (error.response && error.response.status === 403) {
+      const rateLimitMessage =
+        error.response.headers['x-ratelimit-remaining'] === '0'
+          ? "GitHub API rate limit exceeded. Please try again after 1 hour."
+          : "Access forbidden by GitHub API.";
+      return res.status(429).json({
+        error: rateLimitMessage,
+        details: error.message,
+      });
+    }
+
     if (error.response && error.response.status === 404) {
       return res.status(404).json({ error: "GitHub user or repo not found" });
     }
@@ -121,4 +134,4 @@ const getMarks = async (req, res) => {
   }
 }
 
-export {getMarks}
+export { getMarks }

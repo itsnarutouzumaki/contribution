@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Login() {
   const navigate = useNavigate();
@@ -17,26 +18,51 @@ function Login() {
     );
 
     if (!popup) {
-      alert("Popup blocked. Please allow popups for this site.");
+      toast.error("Popup blocked. Please allow popups for this site.", {
+        duration: 2000,
+        position: "top-center",
+      });
       return;
     }
 
-    const userData = await new Promise((resolve) => {
-      const allowedOrigins = [
-        "http://localhost:4000",
-        "https://contribution-1.onrender.com",
-      ];
+    try {
+      const userData = await new Promise((resolve, reject) => {
+        const allowedOrigins = [
+          "http://localhost:4000",
+          "https://contribution-1.onrender.com",
+        ];
 
-      const receiveMessage = (event) => {
-        if (!allowedOrigins.includes(event.origin)) return;
-        window.removeEventListener("message", receiveMessage);
-        resolve(event.data);
-      };
+        const receiveMessage = (event) => {
+          if (!allowedOrigins.includes(event.origin)) return;
+          window.removeEventListener("message", receiveMessage);
+          if (event.data && event.data.error) {
+            reject(event.data.error);
+          } else {
+            resolve(event.data);
+          }
+        };
 
-      window.addEventListener("message", receiveMessage);
-    });
-    console.log(userData);
-    navigate("/dashboard", { state: { user: userData.user } });
+        window.addEventListener("message", receiveMessage);
+
+        // Optional: timeout in case user closes popup or no response
+        setTimeout(() => {
+          window.removeEventListener("message", receiveMessage);
+          reject("Login timed out. Please try again.");
+        }, 60000);
+      });
+
+      console.log(userData);
+      navigate("/dashboard", { state: { user: userData.user } });
+      toast.success("You logged in successfully", {
+        duration: 2000,
+        position: "top-center",
+      });
+    } catch (error) {
+      toast.error(error || "Login failed. Please try again.", {
+        duration: 2000,
+        position: "top-center",
+      });
+    }
   };
 
   return (
