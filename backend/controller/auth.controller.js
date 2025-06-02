@@ -2,7 +2,7 @@ import axios from "axios";
 
 const auth = (req, res) => {
   console.log("/auth/github got hit");
-  const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=http://localhost:4000/auth/github/callback`;
+  const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=https://contribution-1.onrender.com/auth/github/callback`;
   console.log("redirected successfully");
   res.redirect(redirect_uri);
 };
