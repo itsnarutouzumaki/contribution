@@ -67,7 +67,7 @@ function Profile() {
     console.log(user);
     try {
       const response = await axios.post(
-        "https://contribution-1.onrender.com/get/marks",
+        "http://localhost:4000/get/marks",
         { username: user.login },
         { withCredentials: true }
       );
