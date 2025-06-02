@@ -8,7 +8,7 @@ const getMarks = async (req, res) => {
   const access_token = req.cookies?.accessToken;
 
   if (!access_token) {
-    return res.status(405).json({ error: "Access token missing or expired" });
+    return res.status(408).json({ error: "Access token missing or expired" });
   }
 
   try {

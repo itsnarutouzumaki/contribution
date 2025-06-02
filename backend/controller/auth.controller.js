@@ -48,17 +48,15 @@ const authCallback = async (req, res) => {
     // Set the access token in a secure HttpOnly cookie
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "None",
     };
 
     res.cookie("accessToken", access_token, options).send(`
       <html>
         <body>
           <script>
-            window.opener.postMessage(${JSON.stringify(
-              { user }
-            )}, "*");
+            window.opener.postMessage(${JSON.stringify({ user })}, "*");
             window.close();
           </script>
         </body>
