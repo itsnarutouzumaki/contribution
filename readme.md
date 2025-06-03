@@ -59,11 +59,11 @@ npm run dev
 ```
 
 ### 7. **Open your browser:**
-- Visit `http://localhost:3000` (or the frontend port) and click "Login with GitHub"
+- Visit the frontend port and click "Login with GitHub"
 
 ## .env Configuration (Backend)
 
-Your `backend/.env` file should look like as '.sample.env'
+Your `backend/.env` file should look like as `backend/.sample.env`
 
 ## Process Overview
 
