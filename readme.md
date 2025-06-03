@@ -40,11 +40,6 @@ npm install
   ```bash
   cp .sample.env .env
   ```
-- Edit `backend/.env` and fill in the required values:
-  - `GITHUB_CLIENT_ID`: Your GitHub OAuth app client ID
-  - `GITHUB_CLIENT_SECRET`: Your GitHub OAuth app client secret
-  - `SESSION_SECRET`: A random string for session encryption
-  - `CALLBACK_URL`: The callback URL registered with your GitHub OAuth app
 
 ### 5. **Run the backend application:**
 ```bash
