@@ -1,3 +1,19 @@
+# netlify.toml Configuration File
+
+This configuration file defines the build and deployment settings for a frontend project hosted on Netlify.
+
+- **[build]**
+  - `command`: Specifies the build command to be executed by Netlify. Here, `npm run build` is used to generate the production-ready files.
+  - `publish`: Indicates the directory (`dist`) containing the files to be published after the build process.
+
+- **[[headers]]**
+  - Applies custom HTTP headers to all JavaScript files under the `/assets/` directory.
+  - Sets the `Content-Type` header to `application/javascript` to ensure correct MIME type delivery for JavaScript assets.
+
+- **[[redirects]]**
+  - Implements a single-page application (SPA) redirect rule.
+  - All routes (`/*`) are redirected to `/index.html` with a status code of 200.
+  - This ensures that client-side routing works correctly, allowing the SPA to handle navigation without server-side routing.
 [build]
   command = "npm run build"
   publish = "dist"

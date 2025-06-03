@@ -1,5 +1,18 @@
 import React from "react";
 
+/**
+ * RepoBar component renders a styled link to a GitHub repository.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Object} props.repo - Repository object containing details to display.
+ * @param {string} props.repo.html_url - The URL of the GitHub repository.
+ * @param {string} props.repo.name - The name of the GitHub repository.
+ * @returns {JSX.Element} A styled anchor element linking to the repository.
+ *
+ * @example
+ * <RepoBar repo={{ name: "my-repo", html_url: "https://github.com/user/my-repo" }} />
+ */
 function RepoBar({ repo }) {
   return (
     <a

@@ -6,6 +6,43 @@ import RepoBar from "./RepoBar";
 import RankBar from "./RankBar";
 import toast from "react-hot-toast";
 
+/**
+ * Profile component displays a user's dashboard with their GitHub organization repositories
+ * and ranking information based on contribution scores.
+ *
+ * Features:
+ * - Fetches and displays public repositories of the organization.
+ * - Shows user ranking either for all-time or the last 30 days.
+ * - Allows toggling between all-time and last 30 days ranking.
+ * - Displays loading and error notifications using toast messages.
+ *
+ * State:
+ * - repos: Array of repository objects fetched from the backend.
+ * - rank: Array of user ranking objects, either all-time or last 30 days.
+ * - last30: Boolean flag to toggle between all-time and last 30 days ranking.
+ * - issueResponse: Object containing the full response data for ranking.
+ * - response: Stores the raw response or error from the API call.
+ * - user: The current user object, initialized from router location state.
+ *
+ * Side Effects:
+ * - Fetches data from the backend API on mount.
+ * - Updates ranking data when the toggle or API response changes.
+ *
+ * UI:
+ * - Displays a loader while fetching data.
+ * - Shows repositories and ranking in separate, scrollable panels.
+ * - Highlights the current user's ranking.
+ *
+ * Dependencies:
+ * - React, useState, useEffect
+ * - axios for HTTP requests
+ * - toast for notifications
+ * - useLocation from react-router-dom for routing state
+ * - RepoBar and RankBar components for rendering lists
+ * - Loader component for loading state
+ *
+ * @component
+ */
 function Profile() {
   const [repos, setRepos] = useState([]);
   const [rank, setRank] = useState([]);

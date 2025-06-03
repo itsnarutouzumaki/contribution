@@ -2,6 +2,25 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+/**
+ * Login component that provides a GitHub OAuth login flow.
+ *
+ * This component renders a button that, when clicked, opens a popup window to initiate
+ * the GitHub authentication process via a backend endpoint. It listens for a message event
+ * from the popup containing user data upon successful authentication. If authentication
+ * succeeds, the user is navigated to the dashboard with their user data. If authentication
+ * fails or is cancelled, an error toast is displayed.
+ *
+ * Features:
+ * - Opens a centered popup window for GitHub OAuth login.
+ * - Handles popup blocking and login timeouts gracefully.
+ * - Listens for secure postMessage events from allowed origins only.
+ * - Displays success or error notifications using toast messages.
+ * - Navigates to the dashboard on successful login, passing user data via navigation state.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered login UI with GitHub login functionality.
+ */
 function Login() {
   const navigate = useNavigate();
 

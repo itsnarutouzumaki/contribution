@@ -10,6 +10,20 @@ dotenv.config();
 const app = express();
 const PORT = 4000;
 
+/**
+ * An array of allowed origins for Cross-Origin Resource Sharing (CORS).
+ * Only requests originating from these URLs will be permitted by the server.
+ *
+ * @type {string[]}
+ * @constant
+ * @example
+ * // Usage in CORS middleware
+ * app.use(cors({
+ *   origin: allowedOrigins
+ * }));
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS}
+ */
 const allowedOrigins = [
   "http://localhost:5173",
   "https://assystantcontribution.netlify.app",

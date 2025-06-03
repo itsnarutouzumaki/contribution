@@ -1,5 +1,28 @@
 import axios from "axios";
 
+/**
+ * Retrieves and calculates marks for a given user based on closed GitHub issues
+ * across all repositories in a specified organization. Marks are determined by
+ * issue labels matching the pattern "sp-<number>". The function computes scores
+ * for all time, the last 60 days, and the last 30 days, and returns sorted
+ * leaderboards for recent activity and all-time performance.
+ *
+ * Authentication is performed using an access token from cookies. Handles
+ * GitHub API rate limits and various error scenarios.
+ *
+ * Response JSON structure:
+ *   - totalIssues: Total number of closed issues processed.
+ *   - repos: Array of repository metadata.
+ *   - sortedScoresLast30: Array of assignee scores for the last 30 days, sorted descending.
+ *   - sortedScoresAllTime: Array of assignee scores for all time, sorted descending.
+ *   - remainingAPICall: Number of GitHub API calls remaining (rate limit).
+ *
+ * @async
+ * @function getMarks
+ * @param {import('express').Request} req - Express request object, expects 'username' in body and 'accessToken' cookie.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Sends a JSON response with marks data or an error message.
+ */
 const getMarks = async (req, res) => {
   // console.log("Got hit");
 

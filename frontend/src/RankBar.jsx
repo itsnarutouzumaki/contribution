@@ -1,5 +1,26 @@
 import React from "react";
 
+/**
+ * Renders a user ranking bar with dynamic styling based on user status and score delta.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Object} props.User - User data object.
+ * @param {string} props.User.assignee - GitHub username of the user.
+ * @param {number} props.User.marks - Current score or marks of the user.
+ * @param {number} [props.User.last60] - User's score from the last 60 days (optional).
+ * @param {boolean} props.status - Indicates if the current user is the logged-in user.
+ * @param {number} props.rank - The user's rank in the leaderboard.
+ *
+ * @returns {JSX.Element} A styled anchor element displaying the user's rank, name, score, and score delta.
+ *
+ * @example
+ * <RankBar
+ *   User={{ assignee: "octocat", marks: 120, last60: 100 }}
+ *   status={true}
+ *   rank={1}
+ * />
+ */
 function RankBar({ User, status, rank }) {
   const delta = User.last60 !== undefined ? User.marks * 2 - User.last60 : null;
   const deltaColor =
