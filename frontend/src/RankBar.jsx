@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function RankBar({ User, status, rank }) {
   const delta = User.last60 !== undefined ? User.marks * 2 - User.last60 : null;
@@ -34,4 +34,4 @@ function RankBar({ User, status, rank }) {
     </a>
   );
 }
-export default RankBar
+export default RankBar;

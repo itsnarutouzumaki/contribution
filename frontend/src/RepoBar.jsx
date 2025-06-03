@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function RepoBar({ repo }) {
   return (
@@ -13,4 +13,4 @@ function RepoBar({ repo }) {
   );
 }
 
-export default RepoBar
+export default RepoBar;

@@ -51,7 +51,7 @@ function Login() {
         }, 60000);
       });
 
-      console.log(userData);
+      // console.log(userData);
       navigate("/dashboard", { state: { user: userData.user } });
       toast.success("You logged in successfully", {
         duration: 2000,

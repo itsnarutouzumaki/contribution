@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getMarks = async (req, res) => {
-  console.log("Got hit");
+  // console.log("Got hit");
 
   const ORGANIZATION_NAME = process.env.ORGANIZATION_NAME;
   const { username } = req.body;
@@ -16,13 +16,23 @@ const getMarks = async (req, res) => {
       Authorization: `token ${access_token}`,
     };
 
+    let remainingAPICall = null;
+
     const reposResponse = await axios.get(
       `https://api.github.com/users/${ORGANIZATION_NAME}/repos`,
       { headers }
     );
 
+    if (reposResponse.headers["x-ratelimit-remaining"]) {
+      remainingAPICall = parseInt(
+        reposResponse.headers["x-ratelimit-remaining"]
+      );
+    }
+
     const repos = reposResponse.data;
-    console.log(`Found ${repos.length} repos for Organization ${ORGANIZATION_NAME}`);
+    // console.log(
+    //   `Found ${repos.length} repos for Organization ${ORGANIZATION_NAME}`
+    // );
 
     const assigneeScoresAllTime = {};
     const assigneeScoresLast30 = {};
@@ -45,6 +55,12 @@ const getMarks = async (req, res) => {
           { headers }
         );
 
+        if (issuesResponse.headers["x-ratelimit-remaining"]) {
+          remainingAPICall = parseInt(
+            issuesResponse.headers["x-ratelimit-remaining"]
+          );
+        }
+
         const issues = issuesResponse.data;
         allIssues = allIssues.concat(issues);
 
@@ -62,17 +78,14 @@ const getMarks = async (req, res) => {
             if (!isNaN(marks)) {
               const closedDate = new Date(issue.closed_at);
 
-              // All-time score
               assigneeScoresAllTime[assigneeName] =
                 (assigneeScoresAllTime[assigneeName] || 0) + marks;
 
-              // Last 60 days
               if (closedDate >= sixtyDaysAgo) {
                 assigneeScoresLast60[assigneeName] =
                   (assigneeScoresLast60[assigneeName] || 0) + marks;
               }
 
-              // Last 30 days
               if (closedDate >= thirtyDaysAgo) {
                 assigneeScoresLast30[assigneeName] =
                   (assigneeScoresLast30[assigneeName] || 0) + marks;
@@ -86,36 +99,36 @@ const getMarks = async (req, res) => {
       }
     }
 
-    // Merge all assignees for last 30/60
     const allRecentAssignees = new Set([
       ...Object.keys(assigneeScoresLast30),
       ...Object.keys(assigneeScoresLast60),
     ]);
 
-    const sortedScoresLast30 = [...allRecentAssignees].map((assignee) => ({
-      assignee,
-      marks: assigneeScoresLast30[assignee] || 0,
-      last60: assigneeScoresLast60[assignee] || 0,
-    })).sort((a, b) => b.marks - a.marks);
+    const sortedScoresLast30 = [...allRecentAssignees]
+      .map((assignee) => ({
+        assignee,
+        marks: assigneeScoresLast30[assignee] || 0,
+        last60: assigneeScoresLast60[assignee] || 0,
+      }))
+      .sort((a, b) => b.marks - a.marks);
 
-    // Sort all-time scores
     const sortedScoresAllTime = Object.entries(assigneeScoresAllTime)
       .sort((a, b) => b[1] - a[1])
       .map(([assignee, marks]) => ({ assignee, marks }));
-
+    // console.log("number of api call left", remainingAPICall);
     res.json({
       totalIssues: allIssues.length,
       repos,
       sortedScoresLast30,
-      sortedScoresAllTime
+      sortedScoresAllTime,
+      remainingAPICall,
     });
   } catch (error) {
-    console.error("API Error:", error.message);
+    // console.error("API Error:", error.message);
 
-    // Handle GitHub API rate limit exceeded
     if (error.response && error.response.status === 403) {
       const rateLimitMessage =
-        error.response.headers['x-ratelimit-remaining'] === '0'
+        error.response.headers["x-ratelimit-remaining"] === "0"
           ? "GitHub API rate limit exceeded. Please try again after 1 hour."
           : "Access forbidden by GitHub API.";
       return res.status(429).json({
@@ -127,11 +140,12 @@ const getMarks = async (req, res) => {
     if (error.response && error.response.status === 404) {
       return res.status(404).json({ error: "GitHub user or repo not found" });
     }
+
     res.status(500).json({
       error: "Failed to fetch issues",
       details: error.message,
     });
   }
-}
+};
 
-export { getMarks }
+export { getMarks };

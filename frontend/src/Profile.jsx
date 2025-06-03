@@ -31,10 +31,15 @@ function Profile() {
       setRepos(response.data.repos);
       setIssueResponse(response.data);
       setRank(response.data.sortedScoresAllTime);
-      toast.success("Data fetched successfully!", {
-        id: "fetch-toast",
-        position: "top-center",
-      });
+
+      const remaining = response.data.remainingAPICall;
+      toast.success(
+        `Data fetched successfully! Remaining API calls: ${remaining}`,
+        {
+          id: "fetch-toast",
+          position: "top-center",
+        }
+      );
     } catch (err) {
       setResponse(err);
       toast.error("Error fetching data: " + err.message, {

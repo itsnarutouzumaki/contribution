@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Profile from "./Profile.jsx";
 import Login from "./Login.jsx";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (

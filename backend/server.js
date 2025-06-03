@@ -2,8 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import * as auth from './controller/auth.controller.js';
-import * as marks from './controller/marks.controller.js';
+import * as auth from "./controller/auth.controller.js";
+import * as marks from "./controller/marks.controller.js";
 
 dotenv.config();
 
@@ -27,7 +27,6 @@ app.use(
     credentials: true,
   })
 );
-
 
 app.use(express.json());
 app.use(cookieParser());

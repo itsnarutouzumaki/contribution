@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const auth = (req, res) => {
-  console.log("/auth/github got hit");
+  // console.log("/auth/github got hit");
   const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=https://contribution-1.onrender.com/auth/github/callback`;
-  console.log("redirected successfully");
+  // console.log("redirected successfully");
   res.redirect(redirect_uri);
 };
 
 const authCallback = async (req, res) => {
-  console.log("/auth/github/callback got hit");
+  // console.log("/auth/github/callback got hit");
   const code = req.query.code;
 
   if (!code) {
@@ -29,7 +29,7 @@ const authCallback = async (req, res) => {
         },
       }
     );
-    console.log("token res got");
+    // console.log("token res got");
     const access_token = tokenRes.data.access_token;
 
     if (!access_token) {
@@ -42,7 +42,7 @@ const authCallback = async (req, res) => {
         Accept: "application/vnd.github+json",
       },
     });
-    console.log("userRes got");
+    // console.log("userRes got");
     const user = userRes.data;
 
     // Set the access token in a secure HttpOnly cookie
@@ -63,7 +63,7 @@ const authCallback = async (req, res) => {
       </html>
     `);
   } catch (err) {
-    console.error("OAuth Error:", err.message);
+    // console.error("OAuth Error:", err.message);
     res.status(500).send("Authentication failed");
   }
 };
