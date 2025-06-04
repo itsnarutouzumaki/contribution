@@ -14,9 +14,12 @@ const statCard = async (req, res) => {
       response = await cardResponse.repoRank(organization, repo, process.env.ACCESS_TOKEN);
     }
 
+    const startY = 60;
+    const rowHeight = 40;
+
     const svgRows = response.map((entry, index) => {
       return `
-        <g transform="translate(10, ${40 + index * 40})">
+        <g transform="translate(10, ${startY + index * rowHeight})">
           <text x="0" y="0" font-size="18" fill="#FFD700">${index + 1}.</text>
           <text x="30" y="0" font-size="18" fill="#FFFFFF">${entry.assignee}</text>
           <text x="280" y="0" font-size="18" fill="#00FFAA" text-anchor="end">${entry.marks}</text>
@@ -24,11 +27,11 @@ const statCard = async (req, res) => {
       `;
     }).join('');
 
-    const height = 40 + response.length * 40;
+    const height = startY + response.length * rowHeight;
 
     const titleText = repo
-      ? `🏆 ${organization}/${repo} Contribution Rank`
-      : `🏆 ${organization} Contribution Rank`;
+      ? `🏆 Repo Contribution Rank`
+      : `🏆 Organization Contribution Rank`;
 
     const svg = `
       <svg width="300" height="${height}" xmlns="http://www.w3.org/2000/svg">
