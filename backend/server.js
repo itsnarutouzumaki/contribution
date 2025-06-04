@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import * as auth from "./controller/auth.controller.js";
 import * as marks from "./controller/marks.controller.js";
+import { statCard } from "./controller/statCard.controller.js";
 
 dotenv.config();
 
@@ -50,6 +51,8 @@ app.get("/auth/github", auth.auth);
 app.get("/auth/github/callback", auth.authCallback);
 
 app.post("/get/marks", marks.getMarks);
+
+app.get("/getcard", statCard);
 
 app.listen(PORT, () => {
   console.log(`✅ Backend running`);

@@ -24,7 +24,6 @@ import axios from "axios";
  * @returns {Promise<void>} Sends a JSON response with marks data or an error message.
  */
 const getMarks = async (req, res) => {
-  // console.log("Got hit");
 
   const ORGANIZATION_NAME = process.env.ORGANIZATION_NAME;
   const { username } = req.body;
@@ -53,9 +52,7 @@ const getMarks = async (req, res) => {
     }
 
     const repos = reposResponse.data;
-    // console.log(
-    //   `Found ${repos.length} repos for Organization ${ORGANIZATION_NAME}`
-    // );
+    
 
     const assigneeScoresAllTime = {};
     const assigneeScoresLast30 = {};
@@ -147,7 +144,7 @@ const getMarks = async (req, res) => {
       remainingAPICall,
     });
   } catch (error) {
-    // console.error("API Error:", error.message);
+   
 
     if (error.response && error.response.status === 403) {
       const rateLimitMessage =
