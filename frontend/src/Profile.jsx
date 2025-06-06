@@ -60,7 +60,7 @@ function Profile() {
     });
     try {
       const response = await axios.post(
-        "https://contribution-1.onrender.com/get/marks",
+        `${import.meta.env.VITE_BACKEND_URL}/get/marks`,
         { username: user.login },
         { withCredentials: true }
       );

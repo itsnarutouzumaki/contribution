@@ -28,6 +28,7 @@ const PORT = 4000;
 const allowedOrigins = [
   "http://localhost:5173",
   "https://assystantcontribution.netlify.app",
+  process.env.FRONTEND_URL
 ];
 
 app.use(

@@ -29,9 +29,9 @@ function Login() {
     const height = 700;
     const left = window.innerWidth / 2 - width / 2;
     const top = window.innerHeight / 2 - height / 2;
-
+    console.log(import.meta.env.VITE_BACKEND_URL);
     const popup = window.open(
-      "https://contribution-1.onrender.com/auth/github",
+      `${import.meta.env.VITE_BACKEND_URL}/auth/github`,
       "GitHub Login",
       `width=${width},height=${height},left=${left},top=${top}`
     );
@@ -48,7 +48,7 @@ function Login() {
       const userData = await new Promise((resolve, reject) => {
         const allowedOrigins = [
           "http://localhost:4000",
-          "https://contribution-1.onrender.com",
+          import.meta.env.VITE_BACKEND_URL,
         ];
 
         const receiveMessage = (event) => {

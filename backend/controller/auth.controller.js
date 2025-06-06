@@ -6,7 +6,7 @@ import axios from "axios";
  */
 const auth = (req, res) => {
   // Construct the GitHub OAuth authorization URL
-  const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=https://contribution-1.onrender.com/auth/github/callback`;
+  const redirect_uri = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.BACKEND_URL}/auth/github/callback`;
   // Redirect the user to GitHub for authentication
   res.redirect(redirect_uri);
 };
