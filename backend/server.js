@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import * as auth from "./controller/auth.controller.js";
 import * as marks from "./controller/marks.controller.js";
 import { statCard } from "./controller/statCard.controller.js";
+import connectDB from "./db/connectDB.db.js";
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ const PORT = 4000;
 const allowedOrigins = [
   "http://localhost:5173",
   "https://assystantcontribution.netlify.app",
-  process.env.FRONTEND_URL
+  process.env.FRONTEND_URL,
 ];
 
 app.use(
@@ -43,6 +44,8 @@ app.use(
     credentials: true,
   })
 );
+
+connectDB();
 
 app.use(express.json());
 app.use(cookieParser());
