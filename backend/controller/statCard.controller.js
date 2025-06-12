@@ -12,6 +12,7 @@ const statCard = async (req, res) => {
       response = await cardResponse.organizationRank(organization, process.env.ACCESS_TOKEN);
     } else {
       response = await cardResponse.repoRank(organization, repo, process.env.ACCESS_TOKEN);
+      response=response.slice(0, 5);
     }
 
     const startY = 60;

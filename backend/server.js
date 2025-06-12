@@ -6,6 +6,7 @@ import * as auth from "./controller/auth.controller.js";
 import * as marks from "./controller/marks.controller.js";
 import { statCard } from "./controller/statCard.controller.js";
 import connectDB from "./db/connectDB.db.js";
+import logger from "./middleware/logData.middleware.js";
 
 dotenv.config();
 
@@ -49,7 +50,7 @@ connectDB();
 
 app.use(express.json());
 app.use(cookieParser());
-
+app.use(logger);
 app.get("/auth/github", auth.auth);
 
 app.get("/auth/github/callback", auth.authCallback);
