@@ -22,6 +22,18 @@ const logDataSchema = new mongoose.Schema(
       type: String,
       required: [true, "Authorization header is required."],
     },
+    country: {
+      type: String,
+      required: [true, "Country is required."],
+    },
+    region: {
+      type: String,
+      required: [true, "Region is required."],
+    },
+    city: {
+      type: String,
+      required: [true, "City is required."],
+    },
   },
   { timestamps: true }
 );
