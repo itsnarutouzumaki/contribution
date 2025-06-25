@@ -47,7 +47,7 @@ function RankBar({ User, status, rank }) {
         {delta !== null && (
           <span className={deltaColor}>
             {" "}
-            ({delta >= 0 ? "+" : "-"}
+            ({delta >= 0 ? "+" : ""}
             {delta} )
           </span>
         )}

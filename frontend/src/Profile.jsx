@@ -104,7 +104,7 @@ function Profile() {
   return (
     <div className="flex flex-col w-fit h-fit justify-center items-center">
       <h1 className="bg-[#172845] text-white text-4xl p-2 rounded-2xl my-2">
-        {user.name}'s Dashboard
+        {user?`${user.name}'s`:"Your"} Dashboard
       </h1>
       {response == null ? (
         <Loader />
