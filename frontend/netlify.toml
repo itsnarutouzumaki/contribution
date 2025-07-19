@@ -1,29 +1,33 @@
-# netlify.toml Configuration File
+# Netlify Configuration File
 
-This configuration file defines the build and deployment settings for a frontend project hosted on Netlify.
-
-- **[build]**
-  - `command`: Specifies the build command to be executed by Netlify. Here, `npm run build` is used to generate the production-ready files.
-  - `publish`: Indicates the directory (`dist`) containing the files to be published after the build process.
-
-- **[[headers]]**
-  - Applies custom HTTP headers to all JavaScript files under the `/assets/` directory.
-  - Sets the `Content-Type` header to `application/javascript` to ensure correct MIME type delivery for JavaScript assets.
-
-- **[[redirects]]**
-  - Implements a single-page application (SPA) redirect rule.
-  - All routes (`/*`) are redirected to `/index.html` with a status code of 200.
-  - This ensures that client-side routing works correctly, allowing the SPA to handle navigation without server-side routing.
+# === Build Settings ===
 [build]
-  command = "npm run build"
-  publish = "dist"
+# Specifies the build command to be executed by Netlify.
+# 'npm run build' is commonly used to generate production-ready files.
+command = "npm run build"
 
+# Indicates the directory containing the files to be published after the build process.
+# 'dist' is a common output directory for many frontend frameworks.
+publish = "dist"
+
+# === Custom Headers ===
+# Applies custom HTTP headers to specific paths.
 [[headers]]
-  for = "/assets/*.js"
-  [headers.values]
-    "Content-Type" = "application/javascript"
+# The path(s) to which these headers apply.
+# This example targets all JavaScript files under the '/assets/' directory.
+for = "/assets/*.js"
+[headers.values]
+# Sets the 'Content-Type' header to 'application/javascript' to ensure correct MIME type delivery.
+"Content-Type" = "application/javascript"
 
+# === Redirect Rules ===
+# Implements URL redirect rules for your site.
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# 'from' is the incoming path or pattern to match. '/*' matches all requests.
+from = "/*"
+# 'to' is the destination path for the redirect.
+# '/index.html' is used for Single Page Applications (SPAs) to serve the main HTML file.
+to = "/index.html"
+# 'status' is the HTTP status code for the redirect.
+# '200' (OK) is crucial for SPAs, as it performs a rewrite without changing the browser URL.
+status = 200
